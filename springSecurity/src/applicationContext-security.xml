@@ -11,7 +11,7 @@
         <!-- "ROLE_"固定，AAA为权限：注意对于我的例子其实是RESOURCES表的NAME字段的值 -->
         <!-- ↓↓↓SPRING默认的访问权限控制↓↓↓ -->
         
-        <!-- 错误写法 ：使用了use-expressions='true'  这种写法将无法识别==》intercept-url pattern="/d.jsp" access="ROLE_AAA"-->
+        <!-- 注意 ：若使用了use-expressions='true'  这种写法将无法识别==》intercept-url pattern="/d.jsp" access="ROLE_AAA"-->
         <intercept-url pattern="/d.jsp" access="hasRole('ROLE_AAA')" />
         <intercept-url pattern="/e.jsp" access="hasRole('ROLE_BBB')" />
         <!-- 注意： com.huaxin.security.MyAccessDecisionManager是自已实现的权限控制-->

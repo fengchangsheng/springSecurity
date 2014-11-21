@@ -1,0 +1,19 @@
+1.是否需要对每一步设置权限
+如果隐藏了相应功能点   是否可以放开路径    看到该功能按钮的人肯定具备了该权限
+比如说有人要看详细的文章   那么点击的文章id不会确定   但是都会以get方式提交   
+这时就要保存所有路径  差别仅仅在于后面跟的id不同      这样做太麻烦   如何改进？
+
+$.ajax({  
+           		  url: "ajax!addRoles.action",  
+          		  type: 'POST',  
+          		  timeout: 2000,  
+         		  cache: false,  
+         		  error: erryFunction,  //错误执行方法    
+         		  success: succFunction //成功执行方法    
+      		  })  
+    		  function erryFunction() {  
+       		     alert("error");  
+    		  }  
+       		  function succFunction(data) {  
+				 alert("已成功保存");	       	 
+      		  }//end function  

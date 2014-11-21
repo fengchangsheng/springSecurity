@@ -1,0 +1,179 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript">
+function editCondi(){
+    var theForm = document.limitonChange;
+    var opts = theForm.fieldShow.options;
+
+    var existOpts = getSameNameOpt(theForm.extendSqlCondition, opts);
+    if(existOpts.length > 0){
+        if(!confirm("The "+existOpts+" has already been selected. Are you sure you want to add again?")){
+            return;
+        }
+    }
+
+    for (var i = 0; i < opts.length; i++) {
+        if(!opts[i].selected){
+            continue;
+        } else {
+            markrow();
+        }
+        var condiValue = theForm.addRel.value+"\t"+theForm.lPare1.value+"\t"+theForm.lPare2.value+"\t"+theForm.lPare3.value+"\t";
+        condiValue += opts[i].value+"\t"+" "+"\t"+" "+"\t";
+        condiValue += theForm.rPare1.value+"\t"+theForm.rPare2.value+"\t"+theForm.rPare3.value+"\t";
+
+        var condiLabel = ""; //theForm.addRel.value+" \t"+theForm.lPare1.value+" \t"+theForm.lPare2.value+" \t"+theForm.lPare3.value+"\t";
+        condiLabel += opts[i].value; //+" \t"+" "+" \t"+" "+" \t";
+        //condiLabel += theForm.rPare1.value+" \t"+theForm.rPare2.value+" \t"+theForm.rPare3.value+" \t";
+
+        var newOpt = new Option(condiLabel, condiValue );
+        var dst = theForm.extendSqlCondition;
+        var selIndex ;
+        selIndex = dst.options.length;
+        if(selIndex < 0) selIndex = 0;
+        dst.options[selIndex] = newOpt;
+        newOpt.selected = true;
+    }
+    return true;
+}
+
+function removeCondi(){
+    var theForm = document.uBMMIQueueDefineForm1;
+    var dst = theForm.extendSqlCondition;
+    var selIndex = dst.selectedIndex;
+    var opts = dst.options;
+    for (var i = opts.length - 1; i >= 0; i--) {
+        if(opts[i].selected){
+            opts[i] = null;
+            markrow();
+        }
+    }
+}
+
+
+function selectAllOpt(src){
+    var i;
+    for ( i = 0; i < src.options.length; i++ ) {
+      var srcOpt = src.options[i];
+      srcOpt.selected = true;
+    }
+}
+</script>
+
+<!-- 权限配置页面 -->
+<form name="limitonChange"  action="">
+ <TABLE cellSpacing=0 cellPadding=0 width=563 border=0>
+              <TBODY>
+                <TR>
+                  <TD align="center">
+                    <!--Added Relations table-->
+                    <TABLE width="100%"  border="0" >
+                      <TBODY>
+                        <TR>
+                          <TD colSpan=6><STRONG></STRONG></TD>
+                        </TR>
+                        <TR>
+                          <TD align="center">-- All Columns --</TD>
+                          <TD ></TD>
+                          <TD align="center">-- Columns Selected--</TD>
+                          <td></td>
+                        </TR>
+
+                     <tr>
+					   <td align="center">
+					     <table>
+							<TR>
+                             <TD style="display:none;"><select name=addRel >
+                            <option value="and" selected>AND</option>
+                            <option value="or">OR</option>
+                          </select></TD>
+                          <TD noWrap style="display:none;"><SELECT name=lPare1>
+                              <OPTION value=""   selected></OPTION>
+                              <OPTION value=(>(</OPTION>
+                            </SELECT> <SELECT   name=lPare2>
+                              <OPTION value="" selected></OPTION>
+                              <OPTION   value=(>(</OPTION>
+                            </SELECT> <SELECT name=lPare3>
+                              <OPTION  value="" selected></OPTION>
+                              <OPTION  value=(>(</OPTION>
+                            </SELECT> </TD>
+                          <TD noWrap>
+        					<html:select property="fieldShow" multiple="8" size="20" style="width:200px;">
+                				<html:optionsCollection property="allConditionNamesOpt"/>
+        					</html:select>
+                            </TD>
+                          <TD noWrap style="display:none;">&nbsp; </TD>
+                          <TD nowrap style="display:none;"><SELECT name=rPare1>
+                              <OPTION value="" selected></OPTION>
+                              <OPTION value=")" > )</OPTION>
+                            </SELECT> <SELECT name=rPare2>
+                              <OPTION value="" selected></OPTION>
+                              <OPTION
+                    value=)>)</OPTION>
+                            </SELECT> <SELECT name=rPare3>
+                              <OPTION
+                    value="" selected></OPTION>
+                              <OPTION
+                  value=)>)</OPTION>
+                            </SELECT> </TD>
+                            <TD style="display:none;">
+                            </TD>
+                          </TR>
+					     </table>
+					   </td>
+					   <td align="center">
+                           <INPUT class=sbttn style="WIDTH: 60px" onclick="editCondi(); " type=button value="Add >>" name=editBut>
+                           <br /><br />
+                            <INPUT class=sbttn style="WIDTH: 60px" onclick="selectAllOpt(fieldShow); selectAllOpt(extendSqlCondition); " type=button value="Select All" name=editBut>
+                           <br /><br />
+                          <INPUT class=sbttn style="WIDTH: 60px" onclick="removeCondi()" type="button" value="Remove <<" name="removeBut">
+					   </td>
+					   <td align="center">
+					     <table>
+                            <TR>
+                            <td colspan="4" align="center">
+                             <html:select property="extendSqlCondition" multiple="true" size="20" style="width:200px;"> <%--  onchange="showCondi();" --%>
+                				<html:optionsCollection property="extendSqlConditionOpt"/>
+                             </html:select>
+                            </td>
+                          </TR>
+						</table>
+					   </td>
+					      <TD>
+                              	<button name="button" type="button" class="sbttn" style="width:80px;" onclick='upSelectedOpt(extendSqlCondition);'><font style="font-family:Arial,Tahoma,Verdana,Helvetica;font-size:8pt;vertical-align:middle">&nbsp;&nbsp;&nbsp;Up&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&and;</font>&nbsp;&nbsp;</button><br><br><br>
+								<button name="button1" type="button" class="sbttn" style="width:80px;" onclick='downSelectedOpt(extendSqlCondition);'><font style="font-family:Arial,Tahoma,Verdana,Helvetica;font-size:8pt;vertical-align:middle">Down &or;</font></button>
+                          </TD>
+					 </tr>
+
+                        <TR>
+                          <TD colSpan=6>&nbsp;</TD>
+                        </TR>
+
+                        <TR>
+                          <TD align="center"> </TD>
+                          <TD ></TD>
+                          
+                       </TR>
+
+                      </TBODY>
+                    </TABLE>
+                    <!--Added Relations table end-->
+                  </TD>
+                </TR>
+                <TR>
+                  <TD>&nbsp;</TD>
+                </TR>
+
+              </TBODY>
+            </TABLE>
+            
+ </form>
+</body>
+</html>

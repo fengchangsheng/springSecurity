@@ -4,4 +4,13 @@
     <bean id="noticeAction" class="com.huaxin.action.NoticeAction" scope="prototype">
         <property name="noticeDao" ref="noticeDao"/>
     </bean>
+    
+    <bean id="limitonAction" class="com.huaxin.action.LimitonAction" scope="prototype">
+        <property name="rolesDao" ref="rolesDao"/>
+        <property name="resourcesDao" ref="resourcesDao"/>
+    </bean>
+    
+    <bean id="ajaxAction" class="com.huaxin.action.AjaxAction" scope="prototype">
+        <property name="rolesDao" ref="rolesDao"/>
+    </bean>
 </beans>

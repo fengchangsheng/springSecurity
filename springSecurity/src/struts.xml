@@ -10,6 +10,20 @@
 			<result name="detail">/detail.jsp</result>
 			<result name="default">/login.jsp</result>
 		</action>
+		
+	    <action name="ajax" class="ajaxAction" method="addRoles">
+		</action>
+		
+		<action name="limiton" class="limitonAction">
+			<result name="loadpage">/limitonConfig.jsp</result>
+		</action>
 	</package>
 	
+	<!-- 需要插件
+	<package name="ajax" namespace="/" extends="json-default">
+		<action name="ajax" class="ajaxAction" >
+			<result name="addComplete" type="json"></result>
+		</action>
+	</package>
+	 -->
 </struts>

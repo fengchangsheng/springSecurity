@@ -1,0 +1,252 @@
+
+首先是spring默认的访问权限控制(这个过程自动进行  通过配置文件来完成)
+然后才是自己配置的权限(数据库中的关系)
+可以看成一条过滤器链   按顺序执行
+
+
+基本结构已经搭建好    只需要往里面填写具体业务逻辑了
+而且示例的jsp     我也给出了权限控制页面显示的用法
+
+在这里还是要感谢原创和后面修改的人
+
+应用标签库：<%@ taglib prefix='security' uri='http://www.springframework.org/security/tags' %> 
+
+<security:authorize>是一个流程控制标签，能够在满足特定安全需求的条件下显示它的内容体。它有三个互斥的参数： 
+
+ifAllGranted——是一个由逗号分隔的权限列表，用户必须拥有所有列出的权限时显示； 
+
+ifAnyGranted——是一个由逗号分隔的权限列表，用户必须至少拥有其中的一个权限时才能显示； 
+
+ifNotGranted——是一个由逗号分隔的权限列表，用户未拥有所有列出的权限时才能显示。 
+
+<security:authentication>获得属性的值比如要获得用户名可以这么写： 
+<security:authentication property="principal.username"></security:authentication> 
+他有三个属性，property是必须的，另外scope和var，var定义一个变量，scope定义var存在的范围
+例子：
+有时需要在页面显示用户名，或者根据用户角色显示或者不显示一些内容。这需要使用到spring security提供的标签库。
+在页面中引入标签库：
+
+ 
+
+ <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+使用标签库的示例：
+
+ <sec:authentication property="principal" var="authentication"/>
+<sec:authorize ifAllGranted="ROLE_USER">可以访问</sec:authorize>
+用户名：${authentication.username }<br />
+前台 ROLE_ANONYMOUS表示匿名用户
+在配置文件中可以设置页面进入的权限
+<intercept-url pattern="/Homepage.*" access="ROLE_ADMIN,IS_AUTHENTICATED_ANONYMOUSLY"/> 
+IS_AUTHENTICATED_ANONYMOUSLY允许匿名用户进入
+IS_AUTHENTICATED_FULLY              允许登录用户进入
+IS_AUTHENTICATED_REMEMBERED  允许登录用户和rememberMe用户进入
+ IS_AUTHENTICATED_FULLY：是则满足以下情况返回通过:
+         **.既不是RememberMeAuthentication也不是AnonymousAuthenticationToken的实例
+      IS_AUTHENTICATED_REMEMBERED：是则满足以下任一情况返回通过:
+         a*.Authentication是RememberMeAuthenticationToken的实例
+         b*.既不是RememberMeAuthentication也不是AnonymousAuthenticationToken的实例
+      IS_AUTHENTICATED_ANONYMOUSLY：是则满足以下任一情况返回通过:
+         a*.Authentication是AnonymousAuthenticationToken的实例
+         b*.既不是RememberMeAuthentication也不是AnonymousAuthenticationToken的实例
+         c*.Authentication是RememberMeAuthenticationToken的实例      
+
+
+还可以通过以下链接加深学习:
+http://blog.csdn.net/k10509806/article/details/6369131(ssh)
+http://www.yihaomen.com/article/java/439.htm(springMVC)
+http://yzxqml.iteye.com/blog/1756106(springMVC)
+
+by fcs  雷冯(雷锋)
+
+
+<%-- 
+   <br />
+    <a href="${root}b.jsp">b.jsp 无权限访问 : 自己实现的权限控制</a>
+    <br />
+    <a href="${root}c.jsp">c.jsp 有权限访问 : 自己实现的权限控制</a>
+    <br />
+    <a href="${root}d.jsp">d.jsp 有权限访问 : SPRING内置的权限控制</a>
+    <br />
+    <a href="${root}e.jsp">e.jsp 无权限访问 : SPRING内置的权限控制</a>
+    <br />
+	<c:url value="/j_spring_security_logout" var="logoutUrl"/>
+	<a href="${logoutUrl}">Log Out</a><br />
+ --%>	
+ 
+ 可用js代码：
+ function editCondi(){
+    var theForm = document.limitonChange;
+    var opts = theForm.fieldShow.options;
+
+    var existOpts = getSameNameOpt(theForm.extendSqlCondition, opts);
+    if(existOpts.length > 0){
+        if(!confirm("The "+existOpts+" has already been selected. Are you sure you want to add again?")){
+            return;
+        }
+    }
+
+    for (var i = 0; i < opts.length; i++) {
+        if(!opts[i].selected){
+            continue;
+        } else {
+            markrow();
+        }
+        var condiValue = theForm.addRel.value+"\t"+theForm.lPare1.value+"\t"+theForm.lPare2.value+"\t"+theForm.lPare3.value+"\t";
+        condiValue += opts[i].value+"\t"+" "+"\t"+" "+"\t";
+        condiValue += theForm.rPare1.value+"\t"+theForm.rPare2.value+"\t"+theForm.rPare3.value+"\t";
+
+        var condiLabel = ""; //theForm.addRel.value+" \t"+theForm.lPare1.value+" \t"+theForm.lPare2.value+" \t"+theForm.lPare3.value+"\t";
+        condiLabel += opts[i].value; //+" \t"+" "+" \t"+" "+" \t";
+        //condiLabel += theForm.rPare1.value+" \t"+theForm.rPare2.value+" \t"+theForm.rPare3.value+" \t";
+
+        var newOpt = new Option(condiLabel, condiValue );
+        var dst = theForm.extendSqlCondition;
+        var selIndex ;
+        selIndex = dst.options.length;
+        if(selIndex < 0) selIndex = 0;
+        dst.options[selIndex] = newOpt;
+        newOpt.selected = true;
+    }
+    return true;
+}
+
+function removeCondi(){
+    var theForm = document.uBMMIQueueDefineForm1;
+    var dst = theForm.extendSqlCondition;
+    var selIndex = dst.selectedIndex;
+    var opts = dst.options;
+    for (var i = opts.length - 1; i >= 0; i--) {
+        if(opts[i].selected){
+            opts[i] = null;
+            markrow();
+        }
+    }
+}
+
+
+function selectAllOpt(src){
+    var i;
+    for ( i = 0; i < src.options.length; i++ ) {
+      var srcOpt = src.options[i];
+      srcOpt.selected = true;
+    }
+}
+ 
+ 
+ 可用页面设计
+ <TABLE cellSpacing=0 cellPadding=0 width=563 border=0>
+              <TBODY>
+                <TR>
+                  <TD align="center">
+                    <!--Added Relations table-->
+                    <TABLE width="100%"  border="0" >
+                      <TBODY>
+                        <TR>
+                          <TD colSpan=6><STRONG></STRONG></TD>
+                        </TR>
+                        <TR>
+                          <TD align="center">-- All Columns --</TD>
+                          <TD ></TD>
+                          <TD align="center">-- Columns Selected--</TD>
+                          <td></td>
+                        </TR>
+
+                     <tr>
+					   <td align="center">
+					     <table>
+							<TR>
+                             <TD style="display:none;"><select name=addRel >
+                            <option value="and" selected>AND</option>
+                            <option value="or">OR</option>
+                          </select></TD>
+                          <TD noWrap style="display:none;"><SELECT name=lPare1>
+                              <OPTION value=""   selected></OPTION>
+                              <OPTION value=(>(</OPTION>
+                            </SELECT> <SELECT   name=lPare2>
+                              <OPTION value="" selected></OPTION>
+                              <OPTION   value=(>(</OPTION>
+                            </SELECT> <SELECT name=lPare3>
+                              <OPTION  value="" selected></OPTION>
+                              <OPTION  value=(>(</OPTION>
+                            </SELECT> </TD>
+                          <TD noWrap>
+        					<html:select property="fieldShow" multiple="8" size="20" style="width:200px;">
+                				<html:optionsCollection property="allConditionNamesOpt"/>
+        					</html:select>
+                            </TD>
+                          <TD noWrap style="display:none;">&nbsp; </TD>
+                          <TD nowrap style="display:none;"><SELECT name=rPare1>
+                              <OPTION value="" selected></OPTION>
+                              <OPTION value=")" > )</OPTION>
+                            </SELECT> <SELECT name=rPare2>
+                              <OPTION value="" selected></OPTION>
+                              <OPTION
+                    value=)>)</OPTION>
+                            </SELECT> <SELECT name=rPare3>
+                              <OPTION
+                    value="" selected></OPTION>
+                              <OPTION
+                  value=)>)</OPTION>
+                            </SELECT> </TD>
+                            <TD style="display:none;">
+                            </TD>
+                          </TR>
+					     </table>
+					   </td>
+					   <td align="center">
+                           <INPUT class=sbttn style="WIDTH: 60px" onclick="editCondi(); " type=button value="Add >>" name=editBut>
+                           <br /><br />
+                            <INPUT class=sbttn style="WIDTH: 60px" onclick="selectAllOpt(fieldShow); selectAllOpt(extendSqlCondition); " type=button value="Select All" name=editBut>
+                           <br /><br />
+                          <INPUT class=sbttn style="WIDTH: 60px" onclick="removeCondi()" type="button" value="Remove <<" name="removeBut">
+					   </td>
+					   <td align="center">
+					     <table>
+                            <TR>
+                            <td colspan="4" align="center">
+                             <html:select property="extendSqlCondition" multiple="true" size="20" style="width:200px;"> <%--  onchange="showCondi();" --%>
+                				<html:optionsCollection property="extendSqlConditionOpt"/>
+                             </html:select>
+                            </td>
+                          </TR>
+						</table>
+					   </td>
+					      <TD>
+                              	<button name="button" type="button" class="sbttn" style="width:80px;" onclick='upSelectedOpt(extendSqlCondition);'><font style="font-family:Arial,Tahoma,Verdana,Helvetica;font-size:8pt;vertical-align:middle">&nbsp;&nbsp;&nbsp;Up&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&and;</font>&nbsp;&nbsp;</button><br><br><br>
+								<button name="button1" type="button" class="sbttn" style="width:80px;" onclick='downSelectedOpt(extendSqlCondition);'><font style="font-family:Arial,Tahoma,Verdana,Helvetica;font-size:8pt;vertical-align:middle">Down &or;</font></button>
+                          </TD>
+					 </tr>
+
+                        <TR>
+                          <TD colSpan=6>&nbsp;</TD>
+                        </TR>
+
+                        <TR>
+                          <TD align="center"> </TD>
+                          <TD ></TD>
+                          
+                       </TR>
+
+                      </TBODY>
+                    </TABLE>
+                    <!--Added Relations table end-->
+                  </TD>
+                </TR>
+                <TR>
+                  <TD>&nbsp;</TD>
+                </TR>
+
+              </TBODY>
+            </TABLE>
+            
+添加资源放在这里不合适   即使是最高级别的管理员    也不方便操作路径什么的    这应该在系统上线前确定   并且通常会不再改变           
+<tr>
+     <td>添加资源:</td>
+  </tr>
+  <tr><td>url</td><td><input type="text" name="url"></td></tr>
+  <tr><td>memo</td><td><input type="text" name="memo"></td></tr>
+  <tr><td>name</td><td><input type="text" name="name"></td></tr>
+  <tr><td>priority</td><td><input type="text" name="priority"></td></tr>
+  <tr><td>type</td><td><input type="text" name="type"></td></tr>
+  <tr><td><input type="button" value="添加资源" class="add"></td></tr>
