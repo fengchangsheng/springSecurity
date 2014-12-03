@@ -12,5 +12,6 @@
     
     <bean id="ajaxAction" class="com.huaxin.action.AjaxAction" scope="prototype">
         <property name="rolesDao" ref="rolesDao"/>
+        <property name="usersDao" ref="usersDao"/>
     </bean>
 </beans>

@@ -1,6 +1,8 @@
 package com.huaxin.action;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +22,8 @@ public class LimitonAction {
 	private List<Roles> rolesList;
 	private List<Resources> resourcesList;
 	private Roles roles;
+	private Resources resources;
+	private String[] ids;
 	
 	public String load(){
 		resourcesList = resourcesDao.findAll();
@@ -31,17 +35,51 @@ public class LimitonAction {
 	}
 	
 	
+	/**
+	 * TODO 此方法有bug   会级联删除许多数据
+	 * 如何才能有效的往第三张表中插入数据
+	 */
+	public String addConfig(){
+		if(roles!=null && ids!=null){
+			System.out.println(roles.getId()+"  "+roles.getName());
+			Set<Resources> resSet = new HashSet<Resources>(); 
+			for (String id : ids) {
+				Resources res = new Resources();
+				res.setId(Integer.parseInt(id));
+				resSet.add(res);
+				System.out.println(id);
+			}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+			roles.setResources(resSet);
+			try {
+				rolesDao.update(roles);
+			} catch (ApplyException e) {
+				e.printStackTrace();
+			}
+		}
+		return "success";
+	}
 	
 	
 	
 	
 	
 	
-	
-	
-	
-	
-	
+	public String[] getIds() {
+		return ids;
+	}
+
+	public void setIds(String[] ids) {
+		this.ids = ids;
+	}
+
+	public Resources getResources() {
+		return resources;
+	}
+
+	public void setResources(Resources resources) {
+		this.resources = resources;
+	}
+
 	public Roles getRoles() {
 		return roles;
 	}

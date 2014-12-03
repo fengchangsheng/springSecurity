@@ -12,7 +12,9 @@ import org.apache.struts2.ServletActionContext;
 
 import com.google.gson.Gson;
 import com.huaxin.bean.Roles;
+import com.huaxin.bean.Users;
 import com.huaxin.dao.RolesDao;
+import com.huaxin.dao.UsersDao;
 import com.huaxin.exception.ApplyException;
 /**
  * @author fcs
@@ -21,9 +23,9 @@ import com.huaxin.exception.ApplyException;
  */
 public class AjaxAction {
 	private RolesDao rolesDao;
+	private UsersDao usersDao;
 	private HttpServletRequest request = null;
 	private HttpServletResponse response = null;
-	private Roles roles;
 
 	public void addRoles(){
 		try {
@@ -37,14 +39,15 @@ public class AjaxAction {
 		}
 	}
 	
-	public void load(){
+	public void loadRoles(){
 		response = ServletActionContext.getResponse();
-		System.out.println("load invoke");
 		PrintWriter pw = null;
 		try {
 			pw = response.getWriter();
 			List<Roles> roles = rolesDao.findAll();
 			for (Roles roles2 : roles) {
+				roles2.setResources(null);//涉及到一个无线循环的bug   gson结合hibernate使用时-注意关联对象属性
+				roles2.setRoles(null);//还有其它解决方案   在这里切掉关联   避免拖衣带水
 				System.out.println(roles2.getName());
 			}
 			Gson gson = new Gson();
@@ -55,13 +58,31 @@ public class AjaxAction {
 		}
 	}
 	
+	public void loadUsers(){
+		response = ServletActionContext.getResponse();
+		PrintWriter pw = null;
+		try {
+			pw = response.getWriter();
+			List<Users> users = usersDao.findAll();
+			for (Users user : users) {
+				System.out.println(user.getAccount());
+				user.setRoles(null);
+			}
+			Gson gson = new Gson();
+			pw.print(gson.toJson(users));
+			pw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	public Roles getRoles() {
-		return roles;
+
+	public UsersDao getUsersDao() {
+		return usersDao;
 	}
 
-	public void setRoles(Roles roles) {
-		this.roles = roles;
+	public void setUsersDao(UsersDao usersDao) {
+		this.usersDao = usersDao;
 	}
 
 	public RolesDao getRolesDao() {

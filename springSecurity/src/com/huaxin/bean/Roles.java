@@ -3,6 +3,7 @@ package com.huaxin.bean;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @SuppressWarnings("serial")
 public class Roles implements java.io.Serializable {
 

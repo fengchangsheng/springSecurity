@@ -32,26 +32,40 @@ $(document).ready(function() {
     });
  });  
  
-<!--处理点击下拉框动态加载角色-->
-$(document).ready(function(){
-	$("#loadroles").click(function(){
-		alert(1);
-		$.get("ajax!load.action",function(data){
-			alert(2);
-		    $("#loadroles").empty();
-			$.each(data, function (index, value) { 
-				alert(data);
-    		//$("#loadroles").append("<option value="+value.id+">"+value.name+"</option>");
-    		 });
-		},"json");
-	});	
-});
 
-
+<!--加载角色-->
+$(document).ready(function() {
+    $('.loadroles').one("click",function() {
+    		  $.get("ajax!loadRoles.action",
+    				function(data){
+    				  $(".loadroles").empty();
+    					  $.each(data, function (index, value) { 
+    	    					$(".loadroles").append("<option value="+value.id+">"+value.name+"</option>");
+    	    			 });
+    				},
+    				"json"
+    		  );
+    });
+ });  
+ 
+ <!--加载用户-->
+ $(document).ready(function() {
+	    $('#loadusers').one("click",function() {
+	    		  $.get("ajax!loadUsers.action",
+	    				function(data){
+	    				  $("#loadusers").empty();
+	    					  $.each(data, function (index, value) { 
+	    	    					$("#loadusers").append("<option value="+value.id+">"+value.account+"</option>");
+	    	    			 });
+	    				},
+	    				"json"
+	    		  );
+	    });
+	 }); 
+ 
+ 
+<!--使用one在一定程度上能解决   但是不利于动态更新    如果我先点击下拉框  再添加角色   由于只刷新一次  那么不会更新到下拉列表中-->
 </script>
-
-
-
 
  
 <!-- 权限配置页面 -->
@@ -62,26 +76,30 @@ $(document).ready(function(){
       <td><input type="button" value="添加角色" id="add"></td>
   </tr>
 
-<form name="limitonChange"  action="">
+<form name="limitonChange"  action="limiton!addConfig.action" method="post">
 <tr>
 	<td>配置角色-资源：</td>
-<td>角色<select name="roles" id="loadroles">
-           <option>---请选择---</option>
+<td>角色<select name="roles.id" class="loadroles">
+           <option>--请选择--</option>
       </select></td>   <!-- 异步刷新 -->
 </tr>
 <tr><td>资源</td>
 <td><c:forEach items="${resourcesList}" var="resources">
-		<input type="checkbox" name="rsid">${resources.name}<br>
+		<input type="checkbox" name="ids" value="${resources.id}">${resources.name}<br>
     </c:forEach>
 </td>
 </tr>
 
  <tr>
 <td>配置用户-角色:</td>
-<td>用户<select name="users"><option>---请选择---</option></select></td>
-	<td> 角色<select name="roles"><option>---请选择---</option></select></td>
+<td>用户<select name="users" id="loadusers"><option>--请选择--</option></select></td>
+	<td> 角色<select name="roles" class="loadroles"><option>--请选择--</option></select></td>
 </tr>                           
- 
+ <tr>
+ 	<td></td>
+    <td><input type="reset" value="重置"></td>
+    <td><input type="submit" value="提交"></td>
+ </tr>
 </table>           
  </form>
 </body>
