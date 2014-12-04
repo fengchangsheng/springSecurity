@@ -28,6 +28,15 @@ $(document).ready(function() {
     				 	alert("保存成功");
     				}
     		  );
+    		  $(".loadroles").load(
+    			  "ajax!loadRoles.action",
+    				function(data){
+    				  $(".loadroles").empty();
+    					  $.each(data, function (index, value) {  
+    	    					$(".loadroles").append("<option value="+value.id+">"+value.name+"</option>");
+    	    			 });
+    				}
+    		  );
     	}
     });
  });  
@@ -79,7 +88,7 @@ $(document).ready(function() {
 <form name="limitonChange"  action="limiton!addConfig.action" method="post">
 <tr>
 	<td>配置角色-资源：</td>
-<td>角色<select name="roles.id" class="loadroles">
+<td>角色<select name="rid1" class="loadroles">
            <option>--请选择--</option>
       </select></td>   <!-- 异步刷新 -->
 </tr>
@@ -92,8 +101,8 @@ $(document).ready(function() {
 
  <tr>
 <td>配置用户-角色:</td>
-<td>用户<select name="users" id="loadusers"><option>--请选择--</option></select></td>
-	<td> 角色<select name="roles" class="loadroles"><option>--请选择--</option></select></td>
+<td>用户<select name="users.id" id="loadusers"><option>--请选择--</option></select></td>
+	<td> 角色<select name="rid2" class="loadroles"><option>--请选择--</option></select></td>
 </tr>                           
  <tr>
  	<td></td>

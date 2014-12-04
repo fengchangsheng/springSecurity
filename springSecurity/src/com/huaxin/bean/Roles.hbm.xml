@@ -17,7 +17,7 @@
             <many-to-many class="com.huaxin.bean.Users"  column="uid" />
         </set>  
         
-        <set cascade="all" name="resources" inverse="true" table="roles_resources">   
+        <set cascade="all" name="resources" inverse="false" table="roles_resources">   
             <key column="rid" />   
             <many-to-many class="com.huaxin.bean.Resources"  column="rsid" />
         </set>  

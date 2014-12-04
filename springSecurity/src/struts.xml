@@ -16,6 +16,7 @@
 		
 		<action name="limiton" class="limitonAction">
 			<result name="loadpage">/limitonConfig.jsp</result>
+			<result name="success">/limitonConfig.jsp</result>
 		</action>
 	</package>
 	

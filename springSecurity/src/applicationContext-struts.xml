@@ -7,6 +7,7 @@
     
     <bean id="limitonAction" class="com.huaxin.action.LimitonAction" scope="prototype">
         <property name="rolesDao" ref="rolesDao"/>
+        <property name="usersDao" ref="usersDao"/>
         <property name="resourcesDao" ref="resourcesDao"/>
     </bean>
     
