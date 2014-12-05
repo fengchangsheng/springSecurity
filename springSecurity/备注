@@ -253,3 +253,5 @@ function selectAllOpt(src){
   <tr><td>priority</td><td><input type="text" name="priority"></td></tr>
   <tr><td>type</td><td><input type="text" name="type"></td></tr>
   <tr><td><input type="button" value="添加资源" class="add"></td></tr>
+  
+  

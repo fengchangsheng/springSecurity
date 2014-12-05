@@ -25,55 +25,39 @@ $(document).ready(function() {
     				    name:msg,
     				},
     				function(data,status){
-    				 	alert("保存成功");
+    				 	alert("角色添加成功");
+    				 	$("#role").val("");
+    	    			$(".loadroles").append("<option value="+data+">"+msg+"</option>");
     				}
     		  );
-    		  $(".loadroles").load(
-    			  "ajax!loadRoles.action",
-    				function(data){
-    				  $(".loadroles").empty();
-    					  $.each(data, function (index, value) {  
-    	    					$(".loadroles").append("<option value="+value.id+">"+value.name+"</option>");
-    	    			 });
-    				}
-    		  );
+    		 
     	}
     });
  });  
  
-
-<!--加载角色-->
-$(document).ready(function() {
-    $('.loadroles').one("click",function() {
-    		  $.get("ajax!loadRoles.action",
-    				function(data){
-    				  $(".loadroles").empty();
-    					  $.each(data, function (index, value) { 
-    	    					$(".loadroles").append("<option value="+value.id+">"+value.name+"</option>");
-    	    			 });
-    				},
-    				"json"
-    		  );
-    });
- });  
  
  <!--加载用户-->
  $(document).ready(function() {
-	    $('#loadusers').one("click",function() {
-	    		  $.get("ajax!loadUsers.action",
+	      $.get("ajax!loadUsers.action",
 	    				function(data){
-	    				  $("#loadusers").empty();
 	    					  $.each(data, function (index, value) { 
 	    	    					$("#loadusers").append("<option value="+value.id+">"+value.account+"</option>");
 	    	    			 });
 	    				},
 	    				"json"
 	    		  );
-	    });
-	 }); 
+<!--加载角色-->     
+	      $.get("ajax!loadRoles.action",
+  				function(data){
+  					 	   $.each(data, function (index, value) { 
+  	    					   $(".loadroles").append("<option value="+value.id+">"+value.name+"</option>");
+  	    				 });
+  				},
+  				"json"
+  		  );
+}); 
  
  
-<!--使用one在一定程度上能解决   但是不利于动态更新    如果我先点击下拉框  再添加角色   由于只刷新一次  那么不会更新到下拉列表中-->
 </script>
 
  
@@ -88,8 +72,8 @@ $(document).ready(function() {
 <form name="limitonChange"  action="limiton!addConfig.action" method="post">
 <tr>
 	<td>配置角色-资源：</td>
-<td>角色<select name="rid1" class="loadroles">
-           <option>--请选择--</option>
+<td>角色<select name="rid1" class="loadroles 1" id="rid1">
+           <option>---请选择---</option>
       </select></td>   <!-- 异步刷新 -->
 </tr>
 <tr><td>资源</td>
@@ -101,8 +85,8 @@ $(document).ready(function() {
 
  <tr>
 <td>配置用户-角色:</td>
-<td>用户<select name="users.id" id="loadusers"><option>--请选择--</option></select></td>
-	<td> 角色<select name="rid2" class="loadroles"><option>--请选择--</option></select></td>
+<td>用户<select name="users.id" id="loadusers"><option>---请选择---</option></select></td>
+	<td> 角色<select name="rid2" class="loadroles 2" id="rid2"><option>---请选择---</option></select></td>
 </tr>                           
  <tr>
  	<td></td>

@@ -30,10 +30,19 @@ public class AjaxAction {
 	public void addRoles(){
 		try {
 			request = ServletActionContext.getRequest();
+			response = ServletActionContext.getResponse();
+			PrintWriter pw = null;
+			try {
+				pw = response.getWriter();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			String name = request.getParameter("name");
 			Roles roles = new Roles();
 			roles.setName(name);
 			rolesDao.save(roles);
+			//获取保存之后自动生成的id   用于向下拉框增加一个选项
+			pw.print(roles.getId());
 		} catch (ApplyException e) {
 			e.printStackTrace();
 		}
